@@ -7,18 +7,19 @@ import dagshub
 import joblib
 import os
 
-# Initialize DagsHub logging (repo name and username)
-import os
-import mlflow
-import dagshub
-
-# Explicitly set MLflow tracking URI & creds from env
+# 🔹 Force MLflow to use credentials from environment (for CI/CD)
 mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
-
 os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME")
 os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
 
-dagshub.init(repo_owner="santosh.flyingmachine", repo_name="iris_dagshub_docker", mlflow=True)
+# 🔹 Initialize DagsHub with explicit user/token auth
+dagshub.init(
+    repo_owner="santosh.flyingmachine",
+    repo_name="iris_dagshub_docker",
+    mlflow=True,
+    user=os.getenv("MLFLOW_TRACKING_USERNAME"),
+    token=os.getenv("MLFLOW_TRACKING_PASSWORD")
+)
 
 # Load dataset
 df = pd.read_csv("data/iris.csv")
@@ -38,6 +39,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 # Define model
 model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+# 🔹 Enable autologging (optional, for more details)
+mlflow.sklearn.autolog()
 
 # Track with MLflow
 with mlflow.start_run():
