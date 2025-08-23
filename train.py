@@ -8,7 +8,17 @@ import joblib
 import os
 
 # Initialize DagsHub logging (repo name and username)
-dagshub.init("iris_dagshub_docker", "santosh.flyingmachine", mlflow=True)
+import os
+import mlflow
+import dagshub
+
+# Explicitly set MLflow tracking URI & creds from env
+mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME")
+os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
+
+dagshub.init(repo_owner="santosh.flyingmachine", repo_name="iris_dagshub_docker", mlflow=True)
 
 # Load dataset
 df = pd.read_csv("data/iris.csv")
