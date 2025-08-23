@@ -23,7 +23,7 @@ jobs:
       - name: Configure DVC remote
         run: |
             pip install dvc[all]
-            dvc remote add -d origin https://dagshub.com/santosh.flyingmachine/iris_dagshub_docker.dvc
+            dvc remote add -f -d origin https://dagshub.com/santosh.flyingmachine/iris_dagshub_docker.dvc
             dvc remote modify origin auth basic
             dvc remote modify origin user ${{ secrets.DAGSHUB_USERNAME }}
             dvc remote modify origin password ${{ secrets.DAGSHUB_TOKEN }}
