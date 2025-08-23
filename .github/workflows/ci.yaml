@@ -30,9 +30,9 @@ jobs:
 
       - name: Train model
         env:
-          MLFLOW_TRACKING_URI: https://dagshub.com/santosh.flyingmachine/iris_dagshub_docker.mlflow
-          MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
-          MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
+            MLFLOW_TRACKING_URI: https://dagshub.com/santosh.flyingmachine/iris_dagshub_docker.mlflow
+            MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+            MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
         run: python train.py
 
       - name: Push dataset & model to DagsHub
