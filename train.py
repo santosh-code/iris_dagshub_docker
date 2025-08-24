@@ -3,21 +3,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 import mlflow
-import dagshub
 import joblib
 import os
 
-# 🔹 Explicitly configure MLflow auth from GitHub Actions secrets
+# 🔹 Configure MLflow with DagsHub credentials
 mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
 os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME")
 os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
-
-# 🔹 Initialize DagsHub (auth picked up from env)
-dagshub.init(
-    repo_owner="santosh.flyingmachine",
-    repo_name="iris_dagshub_docker",
-    mlflow=True
-)
 
 # Load dataset
 df = pd.read_csv("data/iris.csv")
@@ -38,7 +30,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 # Define model
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 
-# 🔹 Optional: log more details automatically
+# 🔹 Enable MLflow autologging
 mlflow.sklearn.autolog()
 
 # Track with MLflow
