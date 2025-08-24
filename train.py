@@ -52,7 +52,7 @@ with mlflow.start_run():
 
     # Save model locally
     os.makedirs("models", exist_ok=True)
-    model_path = "models/iris_rf_model.pkl"
+    model_path = "models/model.pkl"
     joblib.dump(model, model_path)
 
     # Log model as artifact
