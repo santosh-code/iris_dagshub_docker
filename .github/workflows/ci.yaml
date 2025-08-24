@@ -5,7 +5,8 @@ on:
     branches: [ main ]
 
 permissions:
-  contents: write 
+  contents: write     # needed to push commits back to GitHub
+  packages: write     # needed to push Docker images to GHCR
 
 jobs:
   build:
@@ -41,11 +42,11 @@ jobs:
 
       - name: Commit updated model with DVC
         run: |
-            dvc commit -f models/model.pkl
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add dvc.lock
-            git commit -m "Update model version from CI run" || echo "No changes to commit"
+          dvc commit -f models/model.pkl
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dvc.lock
+          git commit -m "Update model version from CI run" || echo "No changes to commit"
 
       - name: Push model to DagsHub storage
         run: dvc push
@@ -61,12 +62,11 @@ jobs:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-            registry: ghcr.io
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and Push Docker image
         run: |
-            docker build -t ghcr.io/${{ github.repository }}:latest .
-            docker push ghcr.io/${{ github.repository }}:latest
- 
+          docker build -t ghcr.io/${{ github.actor }}/iris_dagshub_docker:latest .
+          docker push ghcr.io/${{ github.actor }}/iris_dagshub_docker:latest
