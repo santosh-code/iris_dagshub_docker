@@ -36,13 +36,13 @@ jobs:
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
         run: python train.py
 
-      - name: Track new model with DVC
+      - name: Commit updated model with DVC
         run: |
-          dvc add models/model.pkl
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add models/model.pkl.dvc dvc.yaml dvc.lock
-          git commit -m "Update model version from CI run" || echo "No changes to commit"
+            dvc commit models/model.pkl
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add dvc.lock
+            git commit -m "Update model version from CI run" || echo "No changes to commit"
 
       - name: Push model to DagsHub storage
         run: dvc push
