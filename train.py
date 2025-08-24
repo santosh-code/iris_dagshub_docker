@@ -7,18 +7,16 @@ import dagshub
 import joblib
 import os
 
-# 🔹 Force MLflow to use credentials from environment (for CI/CD)
+# 🔹 Explicitly configure MLflow auth from GitHub Actions secrets
 mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
 os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME")
 os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
 
-# 🔹 Initialize DagsHub with explicit user/token auth
+# 🔹 Initialize DagsHub (auth picked up from env)
 dagshub.init(
     repo_owner="santosh.flyingmachine",
     repo_name="iris_dagshub_docker",
-    mlflow=True,
-    user=os.getenv("MLFLOW_TRACKING_USERNAME"),
-    token=os.getenv("MLFLOW_TRACKING_PASSWORD")
+    mlflow=True
 )
 
 # Load dataset
@@ -40,7 +38,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 # Define model
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 
-# 🔹 Enable autologging (optional, for more details)
+# 🔹 Optional: log more details automatically
 mlflow.sklearn.autolog()
 
 # Track with MLflow
@@ -65,5 +63,5 @@ with mlflow.start_run():
     model_path = "models/iris_rf_model.pkl"
     joblib.dump(model, model_path)
 
-    # Log model as artifact (works with DagsHub)
+    # Log model as artifact
     mlflow.log_artifact(model_path)
