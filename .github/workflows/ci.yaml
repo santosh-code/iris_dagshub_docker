@@ -38,7 +38,7 @@ jobs:
 
       - name: Commit updated model with DVC
         run: |
-            dvc commit models/model.pkl
+            dvc commit -f models/model.pkl
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add dvc.lock
